@@ -3,21 +3,28 @@ package com.mapo.composeanimations.ui
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.mapo.composeanimations.R
 
 
 // from :
@@ -45,7 +52,7 @@ private fun AnimatedVisibilityWithEnterAndExit() {
         visible = visible,
         enter = slideInVertically {
             // Slide in from 40 dp from the top.
-            with(density) { -40.dp.roundToPx() }
+            with(density) { -200.dp.roundToPx() }
         } + expandVertically(
             // Expand from the top.
             expandFrom = Alignment.Top
@@ -210,7 +217,9 @@ private fun AnimatedContentTransitionSpec(count: Int) {
     }
     // [END android_compose_animations_animated_content_transition_spec]
 }
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
+
+
+/*@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun AnimatedContentSizeTransform() {
     // [START android_compose_animations_animated_content_size_transform]
@@ -249,7 +258,7 @@ private fun AnimatedContentSizeTransform() {
         }
     }
     // [END android_compose_animations_animated_content_size_transform]
-}
+}*/
 
 @Composable
 private fun AnimateContentSizeSimple() {
@@ -383,7 +392,7 @@ private object UpdateTransitionCreateChildTransition {
     // [END android_compose_animations_transitions_dialer_example]
 }
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
+/*@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun UpdateTransitionAnimatedVisibility() {
     // [START android_compose_animations_transitions_animated_visibility]
@@ -423,7 +432,7 @@ private fun UpdateTransitionAnimatedVisibility() {
         }
     }
     // [END android_compose_animations_transitions_animated_visibility]
-}
+}*/
 
 private object UpdateTransitionEncapsulating {
     // [START android_compose_animations_transitions_encapsulating]
@@ -660,7 +669,7 @@ private object AnimationVectorCustomType {
     // [END android_compose_animations_vector_convertor_custom_type]
 }
 
-@OptIn(ExperimentalAnimationGraphicsApi::class)
+/*@OptIn(ExperimentalAnimationGraphicsApi::class)
 @Preview
 // [START android_compose_animations_vector_drawable]
 @Composable
@@ -676,7 +685,7 @@ fun AnimatedVectorDrawable() {
         contentScale = ContentScale.Crop
     )
 }
-// [END android_compose_animations_vector_drawable]
+// [END android_compose_animations_vector_drawable]*/
 
 @Composable
 private fun Expanded() {
