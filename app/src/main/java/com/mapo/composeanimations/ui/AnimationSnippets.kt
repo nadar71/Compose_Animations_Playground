@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
@@ -72,9 +73,49 @@ private fun AnimatedVisibilityWithEnterAndExit() {
 
 @Preview
 @Composable
+private fun AnimatedVisibilityWithEnterAndExit_01() {
+    // [START android_compose_animations_animated_visibility_enter_exit]
+    var visible by remember { mutableStateOf(true) }
+    val density = LocalDensity.current
+    AnimatedVisibility(
+        visible = visible,
+        enter = slideInVertically (
+            // animation elapse time 1 sec
+            // different FiniteAnimationSpec:
+            // TweenSpec, SpringSpec, KeyframesSpec, RepeatableSpec, SnapSpec, etc.
+            // By definition, InfiniteRepeatableSpec does not implement this interface.
+            animationSpec = tween(durationMillis = 100),
+        ) {
+            // param initialOffsetY : Slide in from 40 dp from the top.
+            // another way : initialOffset = { density -> -40.dp.roundToPx() }
+            with(density) { -40.dp.roundToPx() }
+            // another value :  initialOffset = { fullHeight -> -fullHeight / 2 }
+        } + expandVertically(
+            // Expand from the bottom.
+            expandFrom = Alignment.Bottom
+        ) + fadeIn(
+            // Fade in with the initial alpha of 0.3f.
+            initialAlpha = 0.3f
+        ) /*+ scaleIn(
+            animationSpec = spring(dampingRatio = 0.0f, stiffness = 0.8f),
+            initialScale = 0.3f
+        ),*/,
+        exit = slideOutVertically() + shrinkVertically() + fadeOut()
+    ) {
+        Text("Hello", Modifier
+            .fillMaxWidth()
+            .height(100.dp))
+    }
+    // [END android_compose_animations_animated_visibility_enter_exit]
+}
+
+
+@Preview
+@Composable
 private fun AnimatedVisibilityMutable() {
     // [START android_compose_animations_animated_visibility_mutable]
     // Create a MutableTransitionState<Boolean> for the AnimatedVisibility.
+    // detect if the animation is running or finished running
     val state = remember {
         MutableTransitionState(false).apply {
             // Start the animation immediately.
@@ -88,6 +129,7 @@ private fun AnimatedVisibilityMutable() {
 
         // Use the MutableTransitionState to know the current animation state
         // of the AnimatedVisibility.
+        // isIdle is when current animation has finished running
         Text(
             text = when {
                 state.isIdle && state.currentState -> "Visible"
@@ -107,6 +149,7 @@ private fun AnimatedVisibilityMutable() {
 private fun AnimatedVisibilityAnimateEnterExitChildren() {
     // [START android_compose_animations_animated_visibility_animate_enter_exit_children]
     var visible by remember { mutableStateOf(true) }
+    val density = LocalDensity.current
 
     AnimatedVisibility(
         visible = visible,
@@ -120,8 +163,16 @@ private fun AnimatedVisibilityAnimateEnterExitChildren() {
                     .align(Alignment.Center)
                     .animateEnterExit(
                         // Slide in/out the inner box.
-                        enter = slideInVertically(),
-                        exit = slideOutVertically()
+                        enter = slideInVertically(
+                            animationSpec = tween(500,
+                                0,
+                                easing = FastOutLinearInEasing)
+                        ),
+                        exit = slideOutVertically(
+                            animationSpec = tween(500,
+                                0,
+                                easing = FastOutLinearInEasing)
+                        )
                     )
                     .sizeIn(minWidth = 256.dp, minHeight = 64.dp)
                     .background(Color.Red)
@@ -150,10 +201,25 @@ private fun AnimatedVisibilityTransition() {
         val background by transition.animateColor(label = "color") { state ->
             if (state == EnterExitState.Visible) Color.Blue else Color.Gray
         }
+        // NB: to be verified : the code with by could be written using this expression as well :
+        /*
+            val transition = rememberInfiniteTransition()
+            val background = transition.animateColor(
+                label = "color",
+                initialValue = Color.Gray,
+                targetValue = Color.Blue,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1000),
+                    repeatMode = RepeatMode.Reverse
+                )
+            )
+        */
         Box(modifier = Modifier.size(128.dp).background(background))
     }
     // [END android_compose_animations_animated_visibility_transition]
 }
+
+// START FROM HERE
 
 @Composable
 @Preview
